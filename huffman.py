@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from corpus import Corpus
 import logging
+
+from corpus import Corpus
+
 
 class LeafNode:
     

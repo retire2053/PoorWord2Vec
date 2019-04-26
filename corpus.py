@@ -1,9 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import jieba
 import logging
 import os
+import re
+
+import jieba
+
 
 class Corpus:
     
@@ -26,7 +29,7 @@ class Corpus:
         
         
     def __read_content_from_dir(self, basepath):
-        logging.info("start to read documents from %s", basepath)
+        logging.debug("start to read documents from %s", basepath)
         filelist = os.listdir(basepath)
         rawtexts = []
         for count in range(len(filelist)):
@@ -44,13 +47,13 @@ class Corpus:
         logging.debug("start to parse text")
 
         if not self.user_dict is None: jieba.load_userdict(self.user_dict)
-
+        numberpattern = self.__get_number_pattern()
         for text in self.rawtexts:
             words_sequence = []
             segs = jieba.cut(text)
             for seg in segs:
                 w = seg.encode("UTF-8")
-                if self.stopword is None or not self.stopword.isStopword(w) :
+                if (self.stopword is None or not self.stopword.isStopword(w)) and not self.__is_number(w, numberpattern) :
                     words_sequence.append(w)
                     self.words_count_total = self.words_count_total + 1
                     if not w in self.words_freq: 
@@ -70,6 +73,16 @@ class Corpus:
             if p<20: logging.info("Word frequency No.%d is \"%s\", freq = %d", p+1, word, counter_list[p][1])        
         
         logging.info("parse text finished.")
+        
+    def __get_number_pattern(self):
+        pattern = re.compile(r'^[-+]?[0-9]+\.[0-9]+$')
+        return pattern
+
+    def __is_number(self, word, numberpattern):
+        if word.isdigit() or numberpattern.match(word):
+            return True
+        else:
+            return False
        
 class Stopwords:
     

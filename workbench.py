@@ -1,11 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+import logging
+import time
+
+from brain import Brain
 from corpus import Corpus
 from huffman import Huffman
 from neuralnetwork import NeuralNetwork
-from brain import Brain
-import logging
+import numpy as np
+
 
 def execution():
     
@@ -31,6 +36,5 @@ def execution():
 
 
 execution()
-    
 
 
